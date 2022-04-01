@@ -1,0 +1,8 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+dailyActivity_merged <-read_csv("C:/Users/Raye/Desktop/Google_Data_Analytics_Professional_Certificate(bellabeat)/Raw_data/dailyActivity_merged.csv")
+```

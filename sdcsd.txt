@@ -1,0 +1,38 @@
+dailyActivity_merged.csv
+dailyCalories_merged.csv
+dailyIntensities_merged.csv
+dailySteps_merged.csv
+heartrate_seconds_merged.csv*
+hourlyCalories_merged.csv*
+hourlyIntensities_merged.csv*
+hourlySteps_merged.csv*
+minuteCaloriesNarrow_merged.csv*
+minuteCaloriesWide_merged.csv*
+minuteIntensitiesNarrow_merged.csv*
+minuteIntensitiesWide_merged.csv*
+minuteMETsNarrow_merged.csv*
+minuteSleep_merged.csv*
+minuteStepsNarrow_merged.csv*
+minuteStepsWide_merged.csv*
+sleepDay_merged.csv*
+weightLogInfo_merged.csv*
+
+#i used this code for writing all this block
+#1 - go where all the csv are locate
+#2 - run this code ll | awk '{$9=substr($9,1,length($9)-5)} 1' | awk '{print"rowSums(is.na("$9"))"}' | sed -r 's/\s+//g'
+ll | awk '{$9=substr($9,1,length($9)-5)} 1' | awk '{print$9,"<-read_csv(../Raw_data/"$9,".csv), show_col_types = FALSE"}' | sed -r 's/\s+//g'
+
+rowSums(is.na (z))
+1.2 Business Task:
+Analyze FitBit Fitness Tracker Data to gain insights into how consumers are using the FitBit app and discover trends and insights for Bellabeat marketing strategy.
+
+# # Business task
+As a member of the marketing analyst team, analyze non-Bellabeat smart fitness devices data (use public data from a competitor) 
+to identify trends on how consumers are using their devices; 
+find out how these trends apply to Bellabeat customers; give recommendations based on analysis to guide marketing strategy.
+
+1.2 Business Task 
+In view of its growth objectives, Bellabeat seeks to analyze data from smart 
+fitness devices in order to unlock potential new growth opportunities for the company which would in turn would help drive its marketing strategy
+
+The keys stakeholer want new trends for their marketing strategy they seeks how non-Bellabeat user use their smart device

@@ -1,0 +1,252 @@
+---
+title: "Case of Study Google Data Analytics Professional Certificate"
+author: "Author [Daniel Méndez](https://github.com/quassidi)"
+output: html_document
+---
+
+## Bellabeat Case Study
+
+### Context
+
+This case of study is from the course [google data analytics](https://www.coursera.org/professional-certificates/google-data-analytics?) I'm going to develop the analysis with the Six Data Analysis Phases
+
+#### About the company
+
+Urška Sršen and Sando Mur founded Bellabeat, a high-tech company that manufactures health-focused smart products.
+Sršen used her background as an artist to develop beautifully designed technology that informs and inspires women around
+the world. Collecting data on activity, sleep, stress, and reproductive health has allowed Bellabeat to empower women with
+knowledge about their own health and habits. Since it was founded in 2013, Bellabeat has grown rapidly and quickly
+positioned itself as a tech-driven wellness company for women.
+
+## 1. Ask 
+
+Sršen asks us to analyze smart device usage data in order to gain insight into how consumers use non-Bellabeat smart
+devices. She then wants you to select one Bellabeat product to apply these insights to in your presentation. These questions
+will guide your analysis:
+
+1. What are some trends in smart device usage?
+2. How could these trends apply to Bellabeat customers?
+3. How could these trends help influence Bellabeat marketing strategy?
+
+#### Business Task
+
+The keys stakeholders ask for new trends for their marketing strategy and for this task they want to know how non-Bellabeat users use their smart device
+
+#### Key Stakeholders
+
+**Urška Sršen:** Bellabeat's co-founder and Chief Creative Oﬃcer
+
+**Sando Mur:** Mathematician and Bellabeat's co-founder; key member of the Bellabeat executive team
+
+**Bellabeat marketing analytics team:** A team of data analysts responsible for collecting, analyzing, and reporting data that helps guide Bellabeat's marketing strategy.
+
+
+## 2. Prepare
+
+Sršen encourages you to use public data that explores smart device users’ daily habits. She points you to a specific data set:
+
+ - [FitBit Fitness Tracker Data](https://www.kaggle.com/datasets/arashnic/fitbit) (CC0: Public Domain, dataset made available through Mobius): This Kaggle data set
+  contains personal fitness tracker from thirty fitbit users. Thirty eligible Fitbit users consented to the submission of
+  personal tracker data, including minute-level output for physical activity, heart rate, and sleep monitoring. It includes
+  information about daily activity, steps, and heart rate that can be used to explore users’ habits.
+  Sršen tells you that this data set might have some limitations, and encourages you to consider adding another data to help
+  address those limitations as you begin to work more with this data.
+
+*Key tasks*
+
+  1. Download data and store it appropriately.
+      - The data is open source and is available on Kaggle:[FitBit Fitness Tracker Data](https://www.kaggle.com/datasets/arashnic/fitbit), I downloaded it and make backup of it
+  2. Identify how it’s organized.
+      - The data consist of 18 csv files and includes physical activity, heart rate, sleep monitoring, daily activity, steps and Calories burned
+
+```{r}
+library(readr)
+```
+
+```{r}
+dailyActivity_merged <-read_csv("../Raw_data/dailyActivity_merged.csv", show_col_types = FALSE)
+dailyCalories_merged <-read_csv("../Raw_data/dailyCalories_merged.csv", show_col_types = FALSE)
+dailyIntensities_merged <-read_csv("../Raw_data/dailyIntensities_merged.csv", show_col_types = FALSE)
+dailySteps_merged <-read_csv("../Raw_data/dailySteps_merged.csv", show_col_types = FALSE)
+heartrate_seconds_merged <-read_csv("../Raw_data/heartrate_seconds_merged.csv", show_col_types = FALSE)
+hourlyCalories_merged <-read_csv("../Raw_data/hourlyCalories_merged.csv", show_col_types = FALSE)
+hourlyIntensities_merged <-read_csv("../Raw_data/hourlyIntensities_merged.csv", show_col_types = FALSE)
+hourlySteps_merged <-read_csv("../Raw_data/hourlySteps_merged.csv", show_col_types = FALSE)
+minuteCaloriesNarrow_merged <-read_csv("../Raw_data/minuteCaloriesNarrow_merged.csv", show_col_types = FALSE)
+minuteCaloriesWide_merged <-read_csv("../Raw_data/minuteCaloriesWide_merged.csv", show_col_types = FALSE)
+minuteIntensitiesNarrow_merged <-read_csv("../Raw_data/minuteIntensitiesNarrow_merged.csv", show_col_types = FALSE)
+minuteIntensitiesWide_merged <-read_csv("../Raw_data/minuteIntensitiesWide_merged.csv", show_col_types = FALSE)
+minuteMETsNarrow_merged <-read_csv("../Raw_data/minuteMETsNarrow_merged.csv", show_col_types = FALSE)
+minuteSleep_merged <-read_csv("../Raw_data/minuteSleep_merged.csv", show_col_types = FALSE)
+minuteStepsNarrow_merged <-read_csv("../Raw_data/minuteStepsNarrow_merged.csv", show_col_types = FALSE)
+minuteStepsWide_merged <-read_csv("../Raw_data/minuteStepsWide_merged.csv", show_col_types = FALSE)
+sleepDay_merged <-read_csv("../Raw_data/sleepDay_merged.csv", show_col_types = FALSE)
+weightLogInfo_merged <-read_csv("../Raw_data/weightLogInfo_merged.csv", show_col_types = FALSE)
+```
+  3. Sort and filter the data.
+```{r message=FALSE}
+library(dplyr)
+```
+
+```{r}
+over2000=filter(dailyActivity_merged,Calories>=2000)
+head(over2000)
+```
+  
+```{r}
+    length(unique(dailyActivity_merged$Id))
+```
+
+
+  4. Determine the credibility of the data.
+    A good data source is ROCCC which stands for Reliable, Original, Comprehensive, Current, and Cited.
+      - Reliable - LOW - Not reliable as it only has 30 respondents
+      - Original - LOW - Third party provider (Amazon Mechanical Turk)
+      - Comprehensive - MED - Parameters match most of Bellabeat's products' parameters
+      - Current - LOW - Data is 5 years old and is not relevant
+      - Cited - LOW - Data collected from third party, hence unknown
+    
+## 3. Process
+
+  Key tasks
+
+  1. Check the data for errors.
+     
+     Finding duplicates values
+```{r}
+sum(duplicated(dailyActivity_merged))
+sum(duplicated(dailyCalories_merged))
+sum(duplicated(dailyIntensities_merged))
+sum(duplicated(dailySteps_merged))
+sum(duplicated(heartrate_seconds_merged))
+sum(duplicated(hourlyCalories_merged))
+sum(duplicated(hourlyIntensities_merged))
+sum(duplicated(hourlySteps_merged))
+sum(duplicated(minuteCaloriesNarrow_merged))
+sum(duplicated(minuteCaloriesWide_merged))
+sum(duplicated(minuteIntensitiesNarrow_merged))
+sum(duplicated(minuteIntensitiesWide_merged))
+sum(duplicated(minuteMETsNarrow_merged))
+sum(duplicated(minuteSleep_merged))
+sum(duplicated(minuteStepsNarrow_merged))
+sum(duplicated(minuteStepsWide_merged))
+sum(duplicated(sleepDay_merged))
+sum(duplicated(weightLogInfo_merged))
+```
+Looking for missing values
+
+```{r}
+sum(is.na(dailyActivity_merged))
+sum(is.na(dailyCalories_merged))
+sum(is.na(dailyIntensities_merged))
+sum(is.na(dailySteps_merged))
+sum(is.na(heartrate_seconds_merged))
+sum(is.na(hourlyCalories_merged))
+sum(is.na(hourlyIntensities_merged))
+sum(is.na(hourlySteps_merged))
+sum(is.na(minuteCaloriesNarrow_merged))
+sum(is.na(minuteCaloriesWide_merged))
+sum(is.na(minuteIntensitiesNarrow_merged))
+sum(is.na(minuteIntensitiesWide_merged))
+sum(is.na(minuteMETsNarrow_merged))
+sum(is.na(minuteSleep_merged))
+sum(is.na(minuteStepsNarrow_merged))
+sum(is.na(minuteStepsWide_merged))
+sum(is.na(sleepDay_merged))
+sum(is.na(weightLogInfo_merged))
+```
+
+```{r}
+  library(DT)
+```
+
+```{r}
+sample_dataduplicated_on_minuteSleep_merged = filter(minuteSleep_merged,date=="5/6/2016 9:11:00 PM")
+```
+```{r}
+datatable(sample_dataduplicated_on_minuteSleep_merged)
+```
+```{r}
+sample_dataduplicated_on_sleepDay_merged = filter(sleepDay_merged,SleepDay=="5/5/2016 12:00:00 AM")
+```
+```{r}
+datatable(sample_dataduplicated_on_minuteSleep_merged)
+```
+
+```{r}
+datatable(weightLogInfo_merged)
+```
+
+  2. Choose your tools.
+```{r message=FALSE}
+  library(tidyverse)
+  library(skimr)
+  library(ggplot2)
+  library(janitor)
+  library(timelineR)
+  library(lubridate)
+```
+    
+  3. Transform the data so you can work with it effectively.
+
+```{r}
+sleepDay_merged_clean = sleepDay_merged[!duplicated(sleepDay_merged), ]
+```
+
+```{r}
+minuteSleep_merged_clean = minuteSleep_merged[!duplicated(minuteSleep_merged), ]
+```
+
+```{r}
+weightLogInfo_merged_clean <- weightLogInfo_merged %>%
+  mutate(Fat = coalesce(Fat, 0))
+```
+```{r}
+# change ActivityDate type from chr to date
+#dailyActivity_merged_cleaned = mdy(dailyActivity_merged$Acti)
+```
+
+  4. Document the cleaning 
+     
+I started the cleanup by looking for duplicates in all datasets, and found that in minuteSleep_merged are 543 rows duplicates and in the sleepDay_merged are 3 rows duplicate i eliminate each duplicated row in both.
+
+Then i seeked for NA values and i found that in the dataset weightLogInfo_merged The users did not fill all the data and the column for fat has 65 values missing i change the value NA for 0.
+
+## 4 & 5 Analyze and Share
+
+Now that the data is stored appropriately and has been prepared for analysis, start putting it to work. Use the following Case
+
+Walking is recognized as an easily accessible mode of physical activity and is therefore supported as a strategy to promote health and well-being. 
+To complement walking, pedometers have been identified as a useful tool for monitoring ambulatory physical activity, typically measuring total steps/day.
+
+
+```{r}
+hist(dailyActivity_merged$Calories)
+```
+
+
+```{r}
+hist(dailyActivity_merged$TotalSteps)
+
+```
+```{r}
+ggplot(data=dailyActivity_merged, aes(x=TotalDistance, y=Calories)) + 
+  geom_point() + geom_smooth() + labs(title="Total Distance vs. Calories")
+```
+```{r}
+ggplot(data=dailyActivity_merged, aes(x=TotalSteps, y=Calories )) + 
+  geom_point() + geom_smooth() + labs(title="Total Steps vs. Calories")
+```
+The intensity and duration of physical activity in pedometer-based messages relevance as expected the total Distance and total Steps of a user have a positive correlation with calories
+
+## 6 Act
+
+### Conclusion
+
+Based on our analysis, there is a positive correlation between the steps taken/distance walked and calories burned.
+Also, there is a positive relationship between the activity level and calories burned.
+
+### Recommendation:
+
+BellaBeat should incorporate a feature that challenges the user to improve their goal encourage customers to take more steps to burn calories the social media component could be really important
+The company should also group create daily goals personalized according to the user profile
